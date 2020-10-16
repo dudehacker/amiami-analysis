@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup # For HTML parsing
 
 class Listing:
 
+    totalPages = None
+
     def __init__(self,driver):
         self.driver = driver
     
@@ -19,7 +21,7 @@ class Listing:
             WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH,"//ul[@class='new-items__inner'] / li[19]")))
             print ("Page is ready!")
             html = self.driver.page_source
-            res = Listing.parseDetail(html)
+            res = self.parseDetail(html)
             print ("done parsing: ")
             return res
 
@@ -28,12 +30,13 @@ class Listing:
 
         return 'testing'
 
-    @staticmethod
-    def parseDetail(html):
+    def parseDetail(self,html):
         output = []
         soup = BeautifulSoup(html, 'lxml')
+        pagers = soup.find(class_='pager-list').findAll('li')
+        self.totalPages = int(pagers[-1].find('a').getText())
         items = soup.find(class_='new-items__inner').findAll('a', href=True)
-        print(len(items))
+        # print(len(items))
         for item in items:
             gcode = item['href'].replace('/eng/detail/?gcode=','')
             # print(gcode)
