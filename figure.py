@@ -46,7 +46,7 @@ class Figure:
         price = dl.findAll('dd')[1].getText()
         if price == 'Open Price':
             price = soup.find(class_='item-detail__price_selling-price').getText()
-            print(price)
+            # print(price)
 
         output['ListPrice']=int(price.strip(' JPY').replace(',',''))
 
