@@ -46,7 +46,7 @@ def saveList(lst,name):
     df.to_csv (name, index = False, header=hasHeader)
 
 # testListing()
-# getFig('HOB-FIG-0812A')
+getFig('FIGURE-050614')
 
 def scrapAllListings():
     listing = Listing(driver)
@@ -73,10 +73,12 @@ def scrapAllListings():
 def scrapAllItems():
     lst = pd.read_csv('listings.csv',header=None)  
     data = pd.read_csv('data.csv')
+    # remove items already scrapped from list
     need = lst[~lst[0].isin(data['gcode'])]
     print(str(need.shape[0]) + " items")
     results = []
     
+    # get all items details
     for i, row in need.iterrows():
         print('Parsing item #'+str(i))
         fig = getFig(row[0])
@@ -87,7 +89,7 @@ def scrapAllItems():
             saveList(results,'data.csv')
 
 
-scrapAllItems()
+# scrapAllItems()
 
 # close
 driver.quit() 

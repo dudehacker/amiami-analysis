@@ -42,7 +42,7 @@ class Figure:
         # remove some early/late in the date field
         if len(releaseDate)>8:
             releaseDate = releaseDate[-8:]
-        if len(releaseDate)>0:
+        if len(releaseDate)>0 and '-' in releaseDate:
             output['ReleaseDate'] = datetime.strptime(releaseDate,'%b-%Y')
         price = dl.findAll('dd')[1].getText()
         output['ListPrice']=int(price.strip(' JPY').replace(',',''))
