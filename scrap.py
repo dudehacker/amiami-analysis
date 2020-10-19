@@ -18,11 +18,11 @@ chrome_options.add_argument('--log-level=3') # do not show the info level log
 chrome_driver = os.getcwd() +"\\chromedriver.exe"
 driver = webdriver.Chrome(options=chrome_options, executable_path=chrome_driver)
 
-def testFig(gcode):
+def getFig(gcode):
     # get detail of a single figure
     fig = Figure(driver)
     res = fig.parse(gcode)
-    print(res)
+    # print(res)
     return res
 
 def testListing():
@@ -34,20 +34,19 @@ def testListing():
     print(listing.totalPages)
     lst = []
     for item in items:
-        fig = testFig(item)
+        fig = getFig(item)
         lst.append(fig)
     saveList(lst,'data.csv')
     
 def saveList(lst,name):
     df = pd.DataFrame(lst)
-    df.to_csv (name, index = False, header=True)
+    hasHeader = True
+    if df.shape[1] == 1:
+        hasHeader = False
+    df.to_csv (name, index = False, header=hasHeader)
 
 # testListing()
-# testFig('FIGURE-055686')
-
-# data issues
-# 1. missing char name --> fixed
-# 2. missing sculptor (FIGURE-055686) --> fixed
+# getFig('HOB-FIG-0812A')
 
 def scrapAllListings():
     listing = Listing(driver)
@@ -69,7 +68,26 @@ def scrapAllListings():
     
 
 
-scrapAllListings()
+# scrapAllListings()
+
+def scrapAllItems():
+    lst = pd.read_csv('listings.csv',header=None)  
+    data = pd.read_csv('data.csv')
+    need = lst[~lst[0].isin(data['gcode'])]
+    print(str(need.shape[0]) + " items")
+    results = []
+    
+    for i, row in need.iterrows():
+        print('Parsing item #'+str(i))
+        fig = getFig(row[0])
+        if fig != None:
+            results.append(fig)
+        # save to disk every 20 items
+        if i % 20 == 0:
+            saveList(results,'data.csv')
+
+
+scrapAllItems()
 
 # close
 driver.quit() 
