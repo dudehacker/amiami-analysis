@@ -55,6 +55,7 @@ class Figure:
     @staticmethod
     def parseLinkField(dl,output,key):
         text = dl.find('dd').find('span').getText()
+        text = text.strip()
         output[key]=text
 
     @staticmethod

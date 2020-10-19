@@ -46,7 +46,7 @@ def saveList(lst,name):
     df.to_csv (name, index = False, header=hasHeader)
 
 # testListing()
-# print(getFig('FIGURE-058092-R'))
+# print(getFig('FIGURE-059726'))
 
 def scrapAllListings():
     listing = Listing(driver)
