@@ -61,7 +61,9 @@ class Figure:
     @staticmethod
     def parseSculptor(dl,output):
         sculptor = dl.find('dd')
-        sculptor.find('span').decompose()
+        # print(sculptor)
+        if 'span' in sculptor:
+            sculptor.find('span').decompose()
         output['Sculptor'] = sculptor.getText()
 
     @staticmethod
@@ -76,6 +78,7 @@ class Figure:
 
     def parseField(self,dl,output,html):
         dt = dl.find('dt')
+        # print(dl)
         if dt == None:
             return
         text = dt.getText()

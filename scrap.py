@@ -46,7 +46,7 @@ def saveList(lst,name):
     df.to_csv (name, index = False, header=hasHeader)
 
 # testListing()
-# print(getFig('FIGURE-059726'))
+# print(getFig('FIG-MOE-0887'))
 
 def scrapAllListings():
     listing = Listing(driver)
@@ -80,7 +80,7 @@ def scrapAllItems():
     print(data.shape[0])
     # get all items details
     for i, row in need.iterrows():
-        print('Parsing item #'+str(i))
+        print('Parsing item #'+str(i)+"/"+str(lst.shape[0]))
         fig = getFig(row[0])
         if fig != None:
             results.append(fig)
