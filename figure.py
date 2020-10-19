@@ -13,10 +13,10 @@ class Figure:
     def __init__(self,driver):
         self.driver = driver
 
-    def logError(self,gcode):
+    def logError(self,msg,gcode):
         timestamp = datetime.now()
         with open("error.log", "a") as logf:
-            logf.write(str(timestamp) + " - ERROR parsing: "+gcode +"\n")
+            logf.write(str(timestamp) + " - " +msg + " - " +gcode +"\n")
     
     def parse(self,gcode):
         page_url = 'https://www.amiami.com/eng/detail/?gcode='+gcode
@@ -30,11 +30,13 @@ class Figure:
             print ("done parsing: "+gcode)
             return(res)
         except TimeoutException:
-            print ("Loading took too much time! gcode="+gcode)
-            self.logError(gcode)
+            msg = "Timeout Error"
+            print(msg+gcode)
+            self.logError(msg,gcode)
         except Exception:
-            print ("Error parsing! gcode="+gcode)
-            self.logError(gcode)
+            msg  = "Parsing Error "
+            print (msg+gcode)
+            self.logError(msg,gcode)
 
     def parseDatePrice(self,dl,output,soup):
         releaseDate = dl.find('dd').getText()

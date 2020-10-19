@@ -68,7 +68,7 @@ def scrapAllListings():
     
 
 
-scrapAllListings()
+# scrapAllListings()
 
 def scrapAllItems():
     lst = pd.read_csv('listings.csv',header=None)  
@@ -76,8 +76,8 @@ def scrapAllItems():
     # remove items already scrapped from list
     need = lst[~lst[0].isin(data['gcode'])]
     print(str(need.shape[0]) + " items")
-    results = []
-    
+    results = data.to_dict('records') #convert to list of dicts
+    print(data.shape[0])
     # get all items details
     for i, row in need.iterrows():
         print('Parsing item #'+str(i))
@@ -89,7 +89,7 @@ def scrapAllItems():
             saveList(results,'data.csv')
 
 
-# scrapAllItems()
+scrapAllItems()
 
 # close
 driver.quit() 
