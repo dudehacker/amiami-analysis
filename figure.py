@@ -26,7 +26,7 @@ class Figure:
             WebDriverWait(self.driver, waitTime).until(EC.presence_of_element_located((By.XPATH,"//section[@class='item-about'] / dl[7]")))
             # print ("Page is ready!")
             html = self.driver.page_source
-            res = Figure.parseDetail(html,gcode)
+            res = self.parseDetail(html,gcode)
             print ("done parsing: "+gcode)
             return(res)
         except TimeoutException:
@@ -36,8 +36,7 @@ class Figure:
             print ("Error parsing! gcode="+gcode)
             self.logError(gcode)
 
-    @staticmethod
-    def parseDatePrice(dl,output):
+    def parseDatePrice(self,dl,output,soup):
         releaseDate = dl.find('dd').getText()
         # remove some early/late in the date field
         if len(releaseDate)>8:
@@ -45,6 +44,10 @@ class Figure:
         if len(releaseDate)>0 and '-' in releaseDate:
             output['ReleaseDate'] = datetime.strptime(releaseDate,'%b-%Y')
         price = dl.findAll('dd')[1].getText()
+        if price == 'Open Price':
+            price = soup.find(class_='item-detail__price_selling-price').getText()
+            print(price)
+
         output['ListPrice']=int(price.strip(' JPY').replace(',',''))
 
     @staticmethod
@@ -68,14 +71,13 @@ class Figure:
                     output[key] = s.replace(key+': ','')
                     break
 
-    @staticmethod
-    def parseField(dl,output):
+    def parseField(self,dl,output,html):
         dt = dl.find('dt')
         if dt == None:
             return
         text = dt.getText()
         if 'Release Date' in text:
-            Figure.parseDatePrice(dl,output)
+            self.parseDatePrice(dl,output,html)
             return
 
         if 'Specifications' in text:
@@ -91,13 +93,12 @@ class Figure:
                 Figure.parseLinkField(dl,output,key)
                 break
 
-    @staticmethod
-    def parseDetail(html,gcode):
+    def parseDetail(self,html,gcode):
         soup = BeautifulSoup(html, 'lxml')
         about = soup.find(class_='item-about')
         details = about.findAll('dl')
         output = {}
         output['gcode']=gcode
         for dl in details:
-            Figure.parseField(dl,output)
+            self.parseField(dl,output,soup)
         return output
