@@ -8,4 +8,8 @@ put chromedrive.exe in same folder
 
 Scrap the list first
 
-then scrap all items
+then scrap all items using scrap.py
+
+Data Analysis
+use the analysis.ipynb
+
