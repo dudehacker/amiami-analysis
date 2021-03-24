@@ -1,5 +1,6 @@
 # amiami-analysis
 Scrap AmiAmi for figure prices and do some data analysis
+Example page: https://www.amiami.com/eng/detail/?gcode=FIGURE-060605
 
 ## Tools needed
 Chrome Driver
